@@ -3,21 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <title>Flertallskalkulator årsmøte Oslo SV</title>
-
 <style>
 body {
     font-family: Arial, sans-serif;
     background: #f4f6f8;
-    margin: 20px;
+    margin: 0;
+    padding: 0;
 }
 
 .container {
     max-width: 700px;
-    margin: auto;
+    margin: 20px auto;
     background: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    min-height: auto;
 }
 
 h1 {
@@ -73,32 +74,44 @@ input[type="checkbox"] {
 }
 
 button {
-    margin-top: 10px;
+    margin-top: 12px;
     margin-right: 8px;
-    padding: 10px 18px;        /* større touch-område */
+    padding: 14px 24px;
     border: none;
     background: #2980b9;
     color: white;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 1em;            /* større tekst */
-    transition: background 0.2s;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background 0.2s, transform 0.1s;
 }
 
 button:hover {
     background: #1c5980;
+    transform: translateY(-1px);
+}
+
+#status {
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+#suggestions {
+    margin-top: 12px;
+    font-size: 0.9em;
 }
 
 @media (max-width: 500px) {
-    button {
-        font-size: 1.05em;      /* litt større på mobil */
-        padding: 12px 20px;     /* ekstra touch-område */
-        width: 100%;             /* tar hele bredden på små skjermer */
-        margin-right: 0;
-        margin-top: 8px;
+    .container {
+        width: 95%;
+        min-height: 90vh;
+        margin: 10px auto;
+        padding: 15px;
     }
-}
-    @media (max-width: 500px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
     label {
         font-size: 0.9em;
         padding: 5px 8px;
@@ -110,16 +123,15 @@ button:hover {
         height: 18px;
     }
     button {
-        font-size: 1.05em;      /* større tekst */
-        padding: 12px 20px;     /* større touch-område */
-        width: 100%;            /* tar hele bredden på små skjermer */
+        font-size: 1.2em;
+        padding: 16px 28px;
+        width: 100%;
         margin-right: 0;
-        margin-top: 8px;
+        margin-top: 10px;
     }
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
@@ -150,155 +162,108 @@ Delegater som mangler til flertall: <b id="missing"></b>
 </div>
 
 <script>
-
+// Delegatdata
 const data = [
-["Stortingsgruppa",2],
-["Oslo Studentlag",4],
-["Stovner",4],
-["Ullern",4],
-["Grorud",5],
-["Bjerke",6],
-["Vestre Aker",6],
-["Bystyregruppa",6],
-["Alna",7],
-["Nordstrand",7],
-["Søndre Nordstrand",7],
-["Frogner",9],
-["Nordre Aker",10],
-["Østensjø",10],
-["St. Hanshaugen",11],
-["Fylkesstyret",12],
-["Sagene",16],
-["Grünerløkka",18],
-["Gamle Oslo",26],
-["Oslo SU",10]
+    ["Stortingsgruppa", 2],
+    ["Oslo Studentlag", 4],
+    ["Stovner", 4],
+    ["Ullern", 4],
+    ["Grorud", 5],
+    ["Bjerke", 6],
+    ["Vestre Aker", 6],
+    ["Bystyregruppa", 6],
+    ["Alna", 7],
+    ["Nordstrand", 7],
+    ["Søndre Nordstrand", 7],
+    ["Frogner", 9],
+    ["Nordre Aker", 10],
+    ["Østensjø", 10],
+    ["St. Hanshaugen", 11],
+    ["Fylkesstyret", 12],
+    ["Sagene", 16],
+    ["Grünerløkka", 18],
+    ["Gamle Oslo", 26],
+    ["Oslo SU", 10]
 ];
 
-const container = document.getElementById("delegates");
+// Kalkulasjon av totals
+const totalDelegates = data.reduce((sum,d)=>sum+d[1],0);
+const majorityThreshold = Math.floor(totalDelegates/2)+1;
 
-let totalDelegates = 0;
+document.getElementById("total").textContent = totalDelegates;
+document.getElementById("majority").textContent = majorityThreshold;
 
-data.forEach(([name,votes])=>{
-
-totalDelegates += votes;
-
-const label = document.createElement("label");
-
-label.innerHTML = `
-<span>
-<input type="checkbox" value="${votes}" data-name="${name}" onchange="update()"> ${name}
-</span>
-<span>${votes}</span>
-`;
-
-container.appendChild(label);
-
+// Lag delegat-checkboxes
+const delegatesDiv = document.getElementById("delegates");
+data.forEach(d => {
+    const label = document.createElement("label");
+    label.innerHTML = `<input type="checkbox" value="${d[1]}"> ${d[0]} (${d[1]})`;
+    delegatesDiv.appendChild(label);
 });
 
-const majority = Math.floor(totalDelegates/2)+1;
-
-document.getElementById("total").innerText = totalDelegates;
-document.getElementById("majority").innerText = majority;
-document.getElementById("missing").innerText = majority;
-
-function update(){
-
-let selected = 0;
-
-document.querySelectorAll("input[type=checkbox]").forEach(box=>{
-if(box.checked){
-selected += Number(box.value);
+// Oppdatering av fremdrift
+function updateProgress() {
+    const checkboxes = document.querySelectorAll("#delegates input");
+    let selected = 0;
+    checkboxes.forEach(cb => {
+        if(cb.checked) selected += parseInt(cb.value);
+    });
+    document.getElementById("selected").textContent = selected;
+    const missing = Math.max(0, majorityThreshold - selected);
+    document.getElementById("missing").textContent = missing;
+    document.getElementById("progress").style.width = `${Math.min(100,(selected/majorityThreshold)*100)}%`;
+    document.getElementById("progress").style.background = selected>=majorityThreshold ? "#27ae60" : "#c0392b";
+    document.getElementById("status").textContent = selected>=majorityThreshold ? "Flertall oppnådd!" : "Flertall ikke oppnådd";
 }
+
+document.querySelectorAll("#delegates input").forEach(cb=>{
+    cb.addEventListener("change", updateProgress);
 });
 
-document.getElementById("selected").innerText = selected;
-
-let percent = (selected/totalDelegates)*100;
-document.getElementById("progress").style.width = percent+"%";
-
-let missing = Math.max(majority-selected,0);
-document.getElementById("missing").innerText = missing;
-
-const status = document.getElementById("status");
-
-if(selected>=majority){
-
-status.innerText="Flertall oppnådd";
-document.getElementById("progress").style.background="#2e7d32";
-
-}else{
-
-status.innerText="Ingen flertall";
-document.getElementById("progress").style.background="#c0392b";
-
+// Nullstill knapp
+function reset() {
+    document.querySelectorAll("#delegates input").forEach(cb=>cb.checked=false);
+    updateProgress();
+    document.getElementById("suggestions").innerHTML="";
 }
 
+// Alna-koalisjonsforslag
+function suggestAlna() {
+    const results = [];
+    const alna = {name:"Alna", votes:7};
+    const others = data.filter(d=>d[0]!=="Alna").map(d=>({name:d[0], votes:d[1]}));
+
+    function combinations(arr,start,combo){
+        let coalition = [alna,...combo];
+        let sum = coalition.reduce((a,b)=>a+b.votes,0);
+        if(sum>=majorityThreshold){
+            results.push(coalition.slice());
+            return;
+        }
+        for(let i=start;i<arr.length;i++){
+            combinations(arr,i+1,[...combo,arr[i]]);
+        }
+    }
+
+    combinations(others,0,[]);
+
+    results.sort((a,b)=>{
+        let sa=a.reduce((x,y)=>x+y.votes,0);
+        let sb=b.reduce((x,y)=>x+y.votes,0);
+        return sa-sb;
+    });
+
+    const container = document.getElementById("suggestions");
+    container.innerHTML="Flertallskoalisjoner som inkluderer Alna:<br>";
+    results.slice(0,15).forEach(r=>{
+        let names = r.map(x=>x.name).join(", ");
+        let votes = r.reduce((x,y)=>x+y.votes,0);
+        container.innerHTML+=`${votes} delegater: ${names}<br>`;
+    });
 }
 
-function reset(){
-
-document.querySelectorAll("input").forEach(x=>x.checked=false);
-update();
-document.getElementById("suggestions").innerHTML="";
-
-}
-
-function suggestAlna(){
-
-let results=[];
-
-const alnaVotes=7;
-
-let others=data.filter(d=>d[0]!=="Alna");
-
-function combinations(arr,start,combo){
-
-let sum=alnaVotes+combo.reduce((a,b)=>a+b[1],0);
-
-if(sum>=majority){
-
-results.push(["Alna",...combo.map(x=>x[0]),sum]);
-return;
-
-}
-
-for(let i=start;i<arr.length;i++){
-
-combo.push(arr[i]);
-combinations(arr,i+1,combo);
-combo.pop();
-
-}
-
-}
-
-combinations(others,0,[]);
-
-results.sort((a,b)=>a[a.length-1]-b[b.length-1]);
-
-let container=document.getElementById("suggestions");
-
-container.innerHTML="<h3>Flertallskoalisjoner med Alna</h3>";
-
-results.slice(0,15).forEach(r=>{
-
-let votes=r.pop();
-
-container.innerHTML+=votes+" delegater: "+r.join(", ")+"<br>";
-
-});
-
-}
-
-update();
-
+updateProgress();
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
