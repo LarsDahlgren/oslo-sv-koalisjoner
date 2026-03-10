@@ -4,21 +4,28 @@
 <meta charset="UTF-8">
 <title>Flertallskalkulator årsmøte Oslo SV</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
+html, body {
+    height: 100%;           /* hele skjermen */
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
 }
 
 .container {
     max-width: 700px;
-    margin: 20px auto;
+    width: 95%;             /* fyller nesten hele bredden på mobil */
+    margin: 0 auto;
     background: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    min-height: auto;
+    
+    /* Dette gjør at container fyller resten av høyden */
+    min-height: 100vh;      
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* kan byttes til center om du vil sentrere vertikalt */
 }
 
 h1 {
@@ -105,8 +112,8 @@ button:hover {
 @media (max-width: 500px) {
     .container {
         width: 95%;
-        min-height: 90vh;
-        margin: 10px auto;
+        min-height: 100vh;    /* fyller hele mobilhøyden */
+        margin: 0 auto;
         padding: 15px;
     }
     .grid {
@@ -267,3 +274,4 @@ updateProgress();
 
 </body>
 </html>
+
