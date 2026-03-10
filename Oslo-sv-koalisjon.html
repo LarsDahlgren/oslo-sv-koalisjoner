@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<title>Koalisjonskalkulator – Oslo SV</title>
+
+<style>
+
+body{
+font-family:Arial, sans-serif;
+background:#f4f6f8;
+margin:40px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:6px;
+margin-top:20px;
+}
+
+label{
+display:flex;
+justify-content:space-between;
+padding:6px;
+border-radius:6px;
+}
+
+label:hover{
+background:#f2f2f2;
+}
+
+.progress-container{
+margin-top:20px;
+background:#eee;
+height:24px;
+border-radius:6px;
+overflow:hidden;
+}
+
+.progress{
+height:100%;
+width:0%;
+background:#c0392b;
+}
+
+button{
+margin-top:10px;
+margin-right:8px;
+padding:6px 10px;
+border:none;
+background:#333;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Koalisjonskalkulator – Oslo SV</h1>
+
+Totalt delegater: <b id="total"></b> |
+Flertallsgrense: <b id="majority"></b>
+
+<div class="grid" id="delegates"></div>
+
+<div class="progress-container">
+<div class="progress" id="progress"></div>
+</div>
+
+<p>
+Valgte delegater: <b id="selected">0</b><br>
+Delegater som mangler til flertall: <b id="missing"></b>
+</p>
+
+<p id="status"></p>
+
+<button onclick="reset()">Nullstill</button>
+<button onclick="suggestAlna()">Koalisjoner med Alna</button>
+
+<div id="suggestions"></div>
+
+</div>
+
+<script>
+
+const data = [
+["Stortingsgruppa",2],
+["Oslo Studentlag",4],
+["Stovner",4],
+["Ullern",4],
+["Grorud",5],
+["Bjerke",6],
+["Vestre Aker",6],
+["Bystyregruppa",6],
+["Alna",7],
+["Nordstrand",7],
+["Søndre Nordstrand",7],
+["Frogner",9],
+["Nordre Aker",10],
+["Østensjø",10],
+["St. Hanshaugen",11],
+["Fylkesstyret",12],
+["Sagene",16],
+["Grünerløkka",18],
+["Gamle Oslo",26],
+["Oslo SU",10]
+];
+
+const container = document.getElementById("delegates");
+
+let totalDelegates = 0;
+
+data.forEach(([name,votes])=>{
+
+totalDelegates += votes;
+
+const label = document.createElement("label");
+
+label.innerHTML = `
+<span>
+<input type="checkbox" value="${votes}" data-name="${name}" onchange="update()"> ${name}
+</span>
+<span>${votes}</span>
+`;
+
+container.appendChild(label);
+
+});
+
+const majority = Math.floor(totalDelegates/2)+1;
+
+document.getElementById("total").innerText = totalDelegates;
+document.getElementById("majority").innerText = majority;
+document.getElementById("missing").innerText = majority;
+
+function update(){
+
+let selected = 0;
+
+document.querySelectorAll("input[type=checkbox]").forEach(box=>{
+if(box.checked){
+selected += Number(box.value);
+}
+});
+
+document.getElementById("selected").innerText = selected;
+
+let percent = (selected/totalDelegates)*100;
+document.getElementById("progress").style.width = percent+"%";
+
+let missing = Math.max(majority-selected,0);
+document.getElementById("missing").innerText = missing;
+
+const status = document.getElementById("status");
+
+if(selected>=majority){
+
+status.innerText="Flertall oppnådd";
+document.getElementById("progress").style.background="#2e7d32";
+
+}else{
+
+status.innerText="Ingen flertall";
+document.getElementById("progress").style.background="#c0392b";
+
+}
+
+}
+
+function reset(){
+
+document.querySelectorAll("input").forEach(x=>x.checked=false);
+update();
+document.getElementById("suggestions").innerHTML="";
+
+}
+
+function suggestAlna(){
+
+let results=[];
+
+const alnaVotes=7;
+
+let others=data.filter(d=>d[0]!=="Alna");
+
+function combinations(arr,start,combo){
+
+let sum=alnaVotes+combo.reduce((a,b)=>a+b[1],0);
+
+if(sum>=majority){
+
+results.push(["Alna",...combo.map(x=>x[0]),sum]);
+return;
+
+}
+
+for(let i=start;i<arr.length;i++){
+
+combo.push(arr[i]);
+combinations(arr,i+1,combo);
+combo.pop();
+
+}
+
+}
+
+combinations(others,0,[]);
+
+results.sort((a,b)=>a[a.length-1]-b[b.length-1]);
+
+let container=document.getElementById("suggestions");
+
+container.innerHTML="<h3>Flertallskoalisjoner med Alna</h3>";
+
+results.slice(0,15).forEach(r=>{
+
+let votes=r.pop();
+
+container.innerHTML+=votes+" delegater: "+r.join(", ")+"<br>";
+
+});
+
+}
+
+update();
+
+</script>
+
+</body>
+</html>
