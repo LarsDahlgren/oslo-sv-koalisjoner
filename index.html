@@ -5,65 +5,105 @@
 <title>Flertallskalkulator årsmøte Oslo SV</title>
 
 <style>
-
-body{
-font-family:Arial, sans-serif;
-background:#f4f6f8;
-margin:40px;
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 20px;
 }
 
-.container{
-max-width:900px;
-margin:auto;
-background:white;
-padding:30px;
-border-radius:10px;
-box-shadow:0 5px 20px rgba(0,0,0,0.08);
+.container {
+    max-width: 700px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
 }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:6px;
-margin-top:20px;
+h1 {
+    margin-top: 0;
+    font-size: 1.5em;
+    text-align: center;
 }
 
-label{
-display:flex;
-justify-content:space-between;
-padding:6px;
-border-radius:6px;
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 4px;
+    margin-top: 15px;
 }
 
-label:hover{
-background:#f2f2f2;
+label {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-size: 0.95em;
 }
 
-.progress-container{
-margin-top:20px;
-background:#eee;
-height:24px;
-border-radius:6px;
-overflow:hidden;
+label:hover {
+    background: #f2f2f2;
 }
 
-.progress{
-height:100%;
-width:0%;
-background:#c0392b;
+.progress-container {
+    margin-top: 15px;
+    background: #eee;
+    height: 20px;
+    border-radius: 6px;
+    overflow: hidden;
 }
 
-button{
-margin-top:10px;
-margin-right:8px;
-padding:6px 10px;
-border:none;
-background:#333;
-color:white;
-border-radius:5px;
-cursor:pointer;
+.progress {
+    height: 100%;
+    width: 0%;
+    background: #c0392b;
 }
 
+button {
+    margin-top: 8px;
+    margin-right: 6px;
+    padding: 5px 10px;
+    border: none;
+    background: #333;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+button:hover {
+    background: #000;
+}
+
+#status {
+    font-weight: bold;
+    margin-top: 6px;
+}
+
+#suggestions {
+    margin-top: 12px;
+    font-size: 0.9em;
+}
+
+@media (max-width: 500px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+    label {
+        font-size: 0.9em;
+        padding: 3px 5px;
+    }
+    h1 {
+        font-size: 1.3em;
+    }
+    .progress-container {
+        height: 16px;
+    }
+    button {
+        font-size: 0.85em;
+        padding: 4px 8px;
+    }
+}
 </style>
 </head>
 
@@ -243,5 +283,6 @@ update();
 
 </body>
 </html>
+
 
 
