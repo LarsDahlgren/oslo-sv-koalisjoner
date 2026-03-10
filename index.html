@@ -5,7 +5,7 @@
 <title>Flertallskalkulator årsmøte Oslo SV</title>
 <style>
 html, body {
-    height: 100%;           /* hele skjermen */
+    height: 100%;
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -14,18 +14,15 @@ html, body {
 
 .container {
     max-width: 700px;
-    width: 95%;             /* fyller nesten hele bredden på mobil */
+    width: 95%;
     margin: 0 auto;
     background: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    
-    /* Dette gjør at container fyller resten av høyden */
-    min-height: 100vh;      
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* kan byttes til center om du vil sentrere vertikalt */
 }
 
 h1 {
@@ -42,6 +39,7 @@ h1 {
     margin-top: 15px;
 }
 
+/* Touch-vennlige delegasjons-checkboxer */
 label {
     display: flex;
     align-items: center;
@@ -52,14 +50,15 @@ label {
     border: 1px solid #ddd;
     cursor: pointer;
     transition: background 0.2s, border-color 0.2s;
-    flex-wrap: wrap;        /* tillater teksten å bryte linje */
-    gap: 8px;               /* litt luft mellom checkbox og tekst */
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 label input[type="checkbox"] {
     width: 24px;
     height: 24px;
-    flex-shrink: 0;         /* holder checkbox i original størrelse */
+    flex-shrink: 0;
+    margin-right: 12px;
 }
 
 label:hover {
@@ -67,26 +66,33 @@ label:hover {
     border-color: #ccc;
 }
 
-@media (max-width: 500px) {
-    label {
-        font-size: 1.3em;
-        padding: 16px 18px;
-    }
-    label input[type="checkbox"] {
-        width: 32px;
-        height: 32px;
-    }
+/* Progress-bar */
+.progress-container {
+    margin-top: 20px;
+    background: #eee;
+    height: 22px;
+    border-radius: 8px;
+    overflow: hidden;
 }
+
+.progress {
+    height: 100%;
+    width: 0%;
+    background: #c0392b;
+    transition: width 0.3s, background 0.3s;
+}
+
+/* Funksjonsknapper */
 button {
     margin-top: 14px;
     margin-right: 8px;
-    padding: 18px 28px;       /* større touch-område */
+    padding: 18px 28px;
     border: none;
     background: #2980b9;
     color: white;
     border-radius: 12px;
     cursor: pointer;
-    font-size: 1.2em;         /* større tekst */
+    font-size: 1.2em;
     font-weight: bold;
     transition: background 0.2s, transform 0.1s;
 }
@@ -106,10 +112,11 @@ button:hover {
     font-size: 0.9em;
 }
 
+/* Mobiltilpasning */
 @media (max-width: 500px) {
     .container {
         width: 95%;
-        min-height: 100vh;    /* fyller hele mobilhøyden */
+        min-height: 100vh;
         margin: 0 auto;
         padding: 15px;
     }
@@ -117,8 +124,13 @@ button:hover {
         grid-template-columns: 1fr;
     }
     label {
-        font-size: 0.9em;
-        padding: 5px 8px;
+        font-size: 1.3em;
+        padding: 16px 18px;
+    }
+    label input[type="checkbox"] {
+        width: 32px;
+        height: 32px;
+        margin-right: 14px;
     }
     h1 {
         font-size: 1.3em;
@@ -127,9 +139,9 @@ button:hover {
         height: 18px;
     }
     button {
-        font-size: 1.4em;      /* større tekst på mobil */
-        padding: 20px 32px;    /* større touch-område på mobil */
-        width: 100%;           /* fyller hele bredden */
+        font-size: 1.4em;
+        padding: 20px 32px;
+        width: 100%;
         margin-right: 0;
         margin-top: 12px;
     }
@@ -148,7 +160,7 @@ Flertallsgrense: <b id="majority"></b>
 <div class="grid" id="delegates"></div>
 
 <div class="progress-container">
-<div class="progress" id="progress"></div>
+    <div class="progress" id="progress"></div>
 </div>
 
 <p>
@@ -190,7 +202,6 @@ const data = [
     ["Oslo SU", 10]
 ];
 
-// Kalkulasjon av totals
 const totalDelegates = data.reduce((sum,d)=>sum+d[1],0);
 const majorityThreshold = Math.floor(totalDelegates/2)+1;
 
@@ -205,7 +216,7 @@ data.forEach(d => {
     delegatesDiv.appendChild(label);
 });
 
-// Oppdatering av fremdrift
+// Oppdatering av progress-bar
 function updateProgress() {
     const checkboxes = document.querySelectorAll("#delegates input");
     let selected = 0;
@@ -215,8 +226,9 @@ function updateProgress() {
     document.getElementById("selected").textContent = selected;
     const missing = Math.max(0, majorityThreshold - selected);
     document.getElementById("missing").textContent = missing;
-    document.getElementById("progress").style.width = `${Math.min(100,(selected/majorityThreshold)*100)}%`;
-    document.getElementById("progress").style.background = selected>=majorityThreshold ? "#27ae60" : "#c0392b";
+    const progressBar = document.getElementById("progress");
+    progressBar.style.width = `${Math.min(100,(selected/majorityThreshold)*100)}%`;
+    progressBar.style.background = selected >= majorityThreshold ? "#27ae60" : "#c0392b";
     document.getElementById("status").textContent = selected>=majorityThreshold ? "Flertall oppnådd!" : "Flertall ikke oppnådd";
 }
 
@@ -250,7 +262,6 @@ function suggestAlna() {
     }
 
     combinations(others,0,[]);
-
     results.sort((a,b)=>{
         let sa=a.reduce((x,y)=>x+y.votes,0);
         let sb=b.reduce((x,y)=>x+y.votes,0);
@@ -271,8 +282,3 @@ updateProgress();
 
 </body>
 </html>
-
-
-
-
-
