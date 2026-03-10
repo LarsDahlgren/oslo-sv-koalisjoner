@@ -98,6 +98,7 @@ button:hover {
         margin-top: 8px;
     }
 }
+    @media (max-width: 500px) {
     label {
         font-size: 0.9em;
         padding: 5px 8px;
@@ -109,8 +110,11 @@ button:hover {
         height: 18px;
     }
     button {
-        font-size: 0.85em;
-        padding: 5px 10px;
+        font-size: 1.05em;      /* større tekst */
+        padding: 12px 20px;     /* større touch-område */
+        width: 100%;            /* tar hele bredden på små skjermer */
+        margin-right: 0;
+        margin-top: 8px;
     }
 }
 </style>
@@ -292,6 +296,7 @@ update();
 
 </body>
 </html>
+
 
 
 
