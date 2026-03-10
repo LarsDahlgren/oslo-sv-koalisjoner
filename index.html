@@ -75,13 +75,13 @@ input[type="checkbox"] {
 button {
     margin-top: 10px;
     margin-right: 8px;
-    padding: 6px 12px;
+    padding: 10px 18px;        /* større touch-område */
     border: none;
     background: #2980b9;
     color: white;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 1em;            /* større tekst */
     transition: background 0.2s;
 }
 
@@ -89,20 +89,15 @@ button:hover {
     background: #1c5980;
 }
 
-#status {
-    font-weight: bold;
-    margin-top: 8px;
-}
-
-#suggestions {
-    margin-top: 12px;
-    font-size: 0.9em;
-}
-
 @media (max-width: 500px) {
-    .grid {
-        grid-template-columns: 1fr;
+    button {
+        font-size: 1.05em;      /* litt større på mobil */
+        padding: 12px 20px;     /* ekstra touch-område */
+        width: 100%;             /* tar hele bredden på små skjermer */
+        margin-right: 0;
+        margin-top: 8px;
     }
+}
     label {
         font-size: 0.9em;
         padding: 5px 8px;
@@ -297,6 +292,7 @@ update();
 
 </body>
 </html>
+
 
 
 
