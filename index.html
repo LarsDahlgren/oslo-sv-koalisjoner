@@ -46,9 +46,9 @@ label {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 0.95em;
+    padding: 12px 16px;       /* større touch-område */
+    border-radius: 8px;
+    font-size: 1.1em;         /* større tekst */
     background: #fafafa;
     border: 1px solid #ddd;
     cursor: pointer;
@@ -61,23 +61,19 @@ label:hover {
 }
 
 input[type="checkbox"] {
-    margin-right: 6px;
-    transform: scale(1.1);
+    margin-right: 10px;       /* litt mer luft til teksten */
+    transform: scale(1.4);    /* større checkbox */
 }
 
-.progress-container {
-    margin-top: 20px;
-    background: #eee;
-    height: 22px;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.progress {
-    height: 100%;
-    width: 0%;
-    background: #c0392b;
-    transition: width 0.3s, background 0.3s;
+@media (max-width: 500px) {
+    label {
+        font-size: 1.3em;     /* større tekst på mobil */
+        padding: 16px 18px;   /* større trykkområde */
+    }
+    input[type="checkbox"] {
+        transform: scale(1.6); /* enda større checkbox på mobil */
+        margin-right: 12px;
+    }
 }
 
 button {
@@ -274,5 +270,6 @@ updateProgress();
 
 </body>
 </html>
+
 
 
