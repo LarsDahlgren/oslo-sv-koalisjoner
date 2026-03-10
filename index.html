@@ -16,40 +16,52 @@ body {
     margin: auto;
     background: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
 
 h1 {
     margin-top: 0;
-    font-size: 1.5em;
+    font-size: 1.6em;
     text-align: center;
+    color: #2c3e50;
 }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 4px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 6px;
     margin-top: 15px;
 }
 
 label {
     display: flex;
     justify-content: space-between;
-    padding: 4px 6px;
+    align-items: center;
+    padding: 6px 10px;
     border-radius: 6px;
     font-size: 0.95em;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
 }
 
 label:hover {
-    background: #f2f2f2;
+    background: #f0f0f0;
+    border-color: #ccc;
+}
+
+input[type="checkbox"] {
+    margin-right: 6px;
+    transform: scale(1.1);
 }
 
 .progress-container {
-    margin-top: 15px;
+    margin-top: 20px;
     background: #eee;
-    height: 20px;
-    border-radius: 6px;
+    height: 22px;
+    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -57,27 +69,29 @@ label:hover {
     height: 100%;
     width: 0%;
     background: #c0392b;
+    transition: width 0.3s, background 0.3s;
 }
 
 button {
-    margin-top: 8px;
-    margin-right: 6px;
-    padding: 5px 10px;
+    margin-top: 10px;
+    margin-right: 8px;
+    padding: 6px 12px;
     border: none;
-    background: #333;
+    background: #2980b9;
     color: white;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 0.9em;
+    transition: background 0.2s;
 }
 
 button:hover {
-    background: #000;
+    background: #1c5980;
 }
 
 #status {
     font-weight: bold;
-    margin-top: 6px;
+    margin-top: 8px;
 }
 
 #suggestions {
@@ -91,17 +105,17 @@ button:hover {
     }
     label {
         font-size: 0.9em;
-        padding: 3px 5px;
+        padding: 5px 8px;
     }
     h1 {
         font-size: 1.3em;
     }
     .progress-container {
-        height: 16px;
+        height: 18px;
     }
     button {
         font-size: 0.85em;
-        padding: 4px 8px;
+        padding: 5px 10px;
     }
 }
 </style>
@@ -283,6 +297,7 @@ update();
 
 </body>
 </html>
+
 
 
 
